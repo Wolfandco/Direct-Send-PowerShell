@@ -17,6 +17,6 @@ $subject = "Subject Line Here"
 
 # Iterate through each email address and send the message
 foreach ($email in $emailAddresses) {
-    Send-MailMessage -From $from -To $email -Subject $subject -Body $body -SmtpServer $smtpServer -BodyAsHtml
+    Send-MailMessage -From $from -To $email -Subject $subject -Body $body -SmtpServer $smtpServer -BodyAsHtml -UseSsl
     Write-Host "Email sent to $email"
 }
