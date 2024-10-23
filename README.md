@@ -14,10 +14,9 @@ This code will loop through the emails within the emailList.txt file and use the
   4b. Change the "body.html" line in the directSend.ps1
 5. Add HTML code to HTML file
 6. Add emails to "emailList.txt"
-7. Change the "company-com.mail.protection.outlook.com" to your target SMTP server.
-8. Change the SUBJECT line and the FROM line.
-9. Execute directSend.ps1
-10. Profit?
+7. Add FROM emails to "fromEmails.txt"
+8. Import-Module DirectSend.ps1
+9. Invoke-DirectSend -SMTPServer company-com.mail.protection.outlook.com -FromFile ./fromEmails.txt -ToFile ./emailList.txt -Body ./body.html -Subject "Test Subject" -Priorty High
 ```
 
 ## Resources:
@@ -25,3 +24,7 @@ This code will loop through the emails within the emailList.txt file and use the
 - [The Call Is Coming From Inside the House: Microsoft Direct Send and Why You Need to Mitigate Now](https://www.wolfandco.com/resources/blog/call-coming-inside-house-microsoft-direct-send-why-you-need-mitigate/)
 - [Microsoft Direct Send – Phishing Abuse Primitive](https://www.jumpsec.com/guides/microsoft-direct-send-phishing-abuse-primitive/)
 - [Spoofing Microsoft 365 Like It’s 1995](https://www.blackhillsinfosec.com/spoofing-microsoft-365-like-its-1995/)
+
+## Inspiration + Added Functionality + ShoutOut
+
+- [Rvrsh3ll FindIngressEmail](https://github.com/rvrsh3ll/FindIngressEmail)
