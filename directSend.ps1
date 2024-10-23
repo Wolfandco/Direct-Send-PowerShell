@@ -21,6 +21,9 @@ function Invoke-DirectSend {
         .PARAMETER ToFile
         Specify a file with a list of To email addresses.
 
+        .PARAMETER Priority
+        Specify a priority (low, normal, high).
+
         .PARAMETER EmailSmtpUser
         Specify an SMTP user.
 
