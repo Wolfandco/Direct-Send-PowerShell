@@ -21,9 +21,6 @@ function Invoke-DirectSend {
         .PARAMETER ToFile
         Specify a file with a list of To email addresses.
 
-        .PARAMETER Priority
-        Specify a priority (low, normal, high).
-
         .PARAMETER EmailSmtpUser
         Specify an SMTP user.
 
@@ -99,7 +96,10 @@ function Invoke-DirectSend {
         [Int]$Delay = 10,
 
         [Parameter(Mandatory = $false)]
-        [Int]$RetryDelay = 31
+        [Int]$RetryDelay = 31,
+
+        [Parameter(Mandatory = $false)]
+        [String]$Headers
     )
 
     # Load email body, From emails, and To emails
@@ -143,16 +143,24 @@ function Invoke-DirectSend {
 
                 # Add custom headers if provided
                 if ($Headers) {
+                    # If Headers is a string "KnowBe4", convert it to a hashtable with KnowBe4 headers
+                    if ($Headers -eq "KnowBe4") {
+                        $Headers = @{
+                            "X-PHISH-TEST" = "KnowBe4"
+                        }
+                    }
+
+                    # Add the headers to the mail message
                     foreach ($key in $Headers.Keys) {
                         $m.Headers.Add($key, $Headers[$key])
                     }
                 }
-
                 # Set Return-Path header
                 $m.Headers.Add('Return-Path', $FromAddress)
 
                 # Set up SMTP client
                 $smtp = New-Object Net.Mail.SmtpClient($SMTPServer)
+                $smtp.EnableSsl = $true
                 if ($EmailSmtpUser -and $EmailSmtpPass) {
                     $smtp.Credentials = New-Object System.Net.NetworkCredential($EmailSmtpUser, $EmailSmtpPass)
                 } elseif ($EmailSmtpUser -or $EmailSmtpPass) {
@@ -161,7 +169,7 @@ function Invoke-DirectSend {
                 }
 
                 # Send the email
-                Write-Verbose "Sending email from $FromAddress to $ToEmail with priority $Priority ..."
+                Write-Verbose "Sending email from $FromAddress to $ToEmail with priority $Priority."
                 $smtp.Send($m)
                 Write-Host "Email sent from $FromAddress to $ToEmail successfully."
 
@@ -169,7 +177,7 @@ function Invoke-DirectSend {
                 Start-Sleep -Seconds $Delay
             }
             catch {
-                Write-Warning "Error sending email from $FromAddress to ${ToEmail}: $($_.Exception.Message)"
+                Write-Warning "Error sending email from $FromAddress to $($ToEmail): $($_.Exception.Message)"
                 Start-Sleep -Seconds $RetryDelay
                 continue
             }
